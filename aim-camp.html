@@ -1,0 +1,520 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aim Camp — 30 Second Challenge</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #080d13;
+      --panel: #101923;
+      --panel-light: #162330;
+      --line: #263545;
+      --text: #eef5f4;
+      --muted: #8496a3;
+      --lime: #c7ff4a;
+      --cyan: #51e5ff;
+      --red: #ff5577;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      min-width: 320px;
+      margin: 0;
+      background:
+        radial-gradient(ellipse at 50% 0%, #172532 0, transparent 42rem),
+        var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    button { font: inherit; }
+
+    .page {
+      width: min(960px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 70px;
+      border-bottom: 1px solid #ffffff12;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      font-size: 14px;
+      font-weight: 900;
+      letter-spacing: .12em;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      border: 1px solid #c7ff4a66;
+      border-radius: 8px;
+      color: var(--lime);
+      font-size: 17px;
+    }
+
+    .header-tag {
+      padding: 7px 10px;
+      border: 1px solid #ffffff18;
+      border-radius: 20px;
+      color: #9eacb7;
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: .12em;
+    }
+
+    .hero {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 34px 2px 27px;
+    }
+
+    .eyebrow {
+      margin: 0 0 9px;
+      color: var(--cyan);
+      font-size: 9px;
+      font-weight: 900;
+      letter-spacing: .19em;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(38px, 7vw, 62px);
+      font-weight: 950;
+      line-height: .96;
+      letter-spacing: -.06em;
+    }
+
+    h1 span { color: var(--lime); }
+
+    .intro {
+      max-width: 465px;
+      margin: 12px 0 0;
+      color: #9baab5;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .crosshair {
+      display: grid;
+      place-items: center;
+      width: 112px;
+      height: 112px;
+      flex: 0 0 auto;
+      margin-right: 27px;
+      border: 1px solid #51e5ff22;
+      border-radius: 50%;
+      color: var(--cyan);
+      font-size: 55px;
+      text-shadow: 0 0 25px #51e5ff88;
+      box-shadow: 0 0 0 12px #51e5ff08, 0 0 0 25px #51e5ff05;
+    }
+
+    .game-card {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 15px;
+      background: #0d151e;
+      box-shadow: 0 22px 70px #0005;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(180deg, #15212d, #111b25);
+    }
+
+    .stat {
+      padding: 15px 17px 14px;
+      border-right: 1px solid #ffffff0b;
+    }
+
+    .stat:last-child { border-right: 0; }
+
+    .stat-label {
+      display: block;
+      margin-bottom: 5px;
+      color: #8395a3;
+      font-size: 8px;
+      font-weight: 900;
+      letter-spacing: .16em;
+    }
+
+    .stat-value {
+      color: white;
+      font-size: 23px;
+      font-weight: 900;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -.04em;
+    }
+
+    .stat-value.lime { color: var(--lime); }
+    .stat-value.cyan { color: var(--cyan); }
+
+    .arena {
+      position: relative;
+      height: 365px;
+      overflow: hidden;
+      background-color: #0a121a;
+      background-image:
+        linear-gradient(#ffffff08 1px, transparent 1px),
+        linear-gradient(90deg, #ffffff08 1px, transparent 1px),
+        radial-gradient(ellipse at center, #12212c, #0a121a 72%);
+      background-size: 32px 32px, 32px 32px, auto;
+      cursor: crosshair;
+      touch-action: manipulation;
+      user-select: none;
+    }
+
+    .arena::after {
+      position: absolute;
+      inset: 10px;
+      border: 1px solid #ffffff0a;
+      border-radius: 8px;
+      content: "";
+      pointer-events: none;
+    }
+
+    .arena-message {
+      position: absolute;
+      z-index: 1;
+      top: 50%;
+      left: 50%;
+      width: min(90%, 340px);
+      margin: 0;
+      color: #91a2ae;
+      font-size: 12px;
+      line-height: 1.6;
+      text-align: center;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .arena-message strong {
+      display: block;
+      margin-bottom: 5px;
+      color: #eaf4f4;
+      font-size: 16px;
+    }
+
+    .target {
+      position: absolute;
+      z-index: 2;
+      display: grid;
+      place-items: center;
+      padding: 0;
+      border: 3px solid #fff;
+      border-radius: 50%;
+      background: radial-gradient(circle, #fff 0 10%, #ffcc58 11% 27%, #ff5577 28% 58%, #a92054 59% 100%);
+      box-shadow: 0 0 0 5px #ff55774b, 0 0 22px #ff5577aa;
+      cursor: crosshair;
+      transition: width .1s, height .1s, left .08s, top .08s;
+      animation: pop-in .12s ease-out;
+    }
+
+    .target:hover { filter: brightness(1.15); }
+
+    @keyframes pop-in {
+      from { opacity: .5; transform: scale(.65); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 14px 16px;
+      border-top: 1px solid var(--line);
+      background: #111b25;
+    }
+
+    .start-button {
+      min-height: 42px;
+      padding: 0 18px;
+      border: 0;
+      border-radius: 8px;
+      background: var(--lime);
+      color: #17200d;
+      font-size: 11px;
+      font-weight: 950;
+      letter-spacing: .06em;
+      box-shadow: 0 5px 20px #c7ff4a20;
+      cursor: pointer;
+      transition: .15s ease;
+    }
+
+    .start-button:hover:not(:disabled) {
+      background: #d8ff83;
+      transform: translateY(-1px);
+    }
+
+    .start-button:disabled {
+      opacity: .7;
+      cursor: default;
+    }
+
+    .hint {
+      color: #8293a0;
+      font-size: 10px;
+      text-align: right;
+    }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 16px 2px 24px;
+      color: #667785;
+      font-size: 9px;
+    }
+
+    .footer span:last-child { color: #829684; }
+
+    [hidden] { display: none !important; }
+
+    button:focus-visible {
+      outline: 3px solid #51e5ff88;
+      outline-offset: 3px;
+    }
+
+    @media (max-width: 600px) {
+      .page { width: calc(100% - 22px); }
+      .hero { padding: 28px 2px 21px; }
+      .crosshair { width: 70px; height: 70px; margin-right: 5px; font-size: 36px; }
+      .stats { grid-template-columns: repeat(2, 1fr); }
+      .stat:nth-child(2) { border-right: 0; }
+      .stat:nth-child(-n+2) { border-bottom: 1px solid #ffffff0b; }
+      .arena { height: 340px; }
+      .controls { align-items: flex-start; flex-direction: column; }
+      .hint { text-align: left; }
+      .footer { flex-direction: column; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div class="brand"><span class="brand-mark">✦</span> AIM CAMP</div>
+      <div class="header-tag">GAMER TRAINING TOOL</div>
+    </header>
+
+    <section class="hero">
+      <div>
+        <p class="eyebrow">ARCADE TRAINING // 01</p>
+        <h1>LOCK IN.<br><span>POP OFF.</span></h1>
+        <p class="intro">Hit as many targets as you can in 30 seconds. Misses count. Keep your aim sharp.</p>
+      </div>
+      <div class="crosshair" aria-hidden="true">◎</div>
+    </section>
+
+    <main class="game-card">
+      <section class="stats" aria-label="Round stats">
+        <div class="stat">
+          <span class="stat-label">TIME</span>
+          <strong class="stat-value cyan" id="time">30</strong>
+        </div>
+        <div class="stat">
+          <span class="stat-label">HITS</span>
+          <strong class="stat-value lime" id="score">0</strong>
+        </div>
+        <div class="stat">
+          <span class="stat-label">ACCURACY</span>
+          <strong class="stat-value" id="accuracy">—</strong>
+        </div>
+        <div class="stat">
+          <span class="stat-label">BEST</span>
+          <strong class="stat-value" id="best">0</strong>
+        </div>
+      </section>
+
+      <section class="arena" id="arena" aria-label="Aim training game">
+        <p class="arena-message" id="message">
+          <strong>Ready to warm up?</strong>
+          Press start, then click the targets as fast as you can.
+        </p>
+        <button class="target" id="target" type="button" aria-label="Hit target" hidden></button>
+      </section>
+
+      <div class="controls">
+        <button class="start-button" id="start" type="button">▶ &nbsp;START 30-SECOND ROUND</button>
+        <span class="hint" id="hint">Click anywhere else in the arena and it counts as a miss.</span>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <span>One quick round. One sharper aim.</span>
+      <span>Best score saves in this browser.</span>
+    </footer>
+  </div>
+
+  <script>
+    "use strict";
+
+    const ROUND_LENGTH = 30;
+    const BEST_KEY = "aim-camp.best.v1";
+
+    const arena = document.querySelector("#arena");
+    const target = document.querySelector("#target");
+    const message = document.querySelector("#message");
+    const startButton = document.querySelector("#start");
+
+    let state = "ready";
+    let score = 0;
+    let hits = 0;
+    let misses = 0;
+    let secondsLeft = ROUND_LENGTH;
+    let endTime = 0;
+    let clock = null;
+    let best = loadBest();
+
+    function loadBest() {
+      try {
+        return Number(localStorage.getItem(BEST_KEY)) || 0;
+      } catch {
+        return 0;
+      }
+    }
+
+    function saveBest(value) {
+      best = value;
+      try {
+        localStorage.setItem(BEST_KEY, String(value));
+      } catch {
+        // The game still works if browser storage is unavailable.
+      }
+    }
+
+    function updateStats() {
+      document.querySelector("#time").textContent = secondsLeft;
+      document.querySelector("#score").textContent = score;
+      document.querySelector("#best").textContent = best;
+
+      const shots = hits + misses;
+      document.querySelector("#accuracy").textContent =
+        shots === 0 ? "—" : `${Math.round((hits / shots) * 100)}%`;
+    }
+
+    function placeTarget() {
+      const bounds = arena.getBoundingClientRect();
+      const size = Math.max(28, 54 - Math.floor(score / 4) * 3);
+      const padding = 15;
+      const maxX = Math.max(padding, bounds.width - size - padding);
+      const maxY = Math.max(padding, bounds.height - size - padding);
+
+      target.style.width = `${size}px`;
+      target.style.height = `${size}px`;
+      target.style.left = `${padding + Math.random() * (maxX - padding)}px`;
+      target.style.top = `${padding + Math.random() * (maxY - padding)}px`;
+    }
+
+    function startRound() {
+      clearInterval(clock);
+      state = "running";
+      score = 0;
+      hits = 0;
+      misses = 0;
+      secondsLeft = ROUND_LENGTH;
+      endTime = Date.now() + ROUND_LENGTH * 1000;
+
+      message.hidden = true;
+      target.hidden = false;
+      startButton.disabled = true;
+      startButton.textContent = "ROUND LIVE";
+      document.querySelector("#hint").textContent = "Stay sharp. The target gets smaller as your score climbs.";
+
+      placeTarget();
+      updateStats();
+
+      clock = setInterval(() => {
+        secondsLeft = Math.max(0, Math.ceil((endTime - Date.now()) / 1000));
+        updateStats();
+
+        if (secondsLeft <= 0) finishRound();
+      }, 80);
+    }
+
+    function finishRound() {
+      if (state !== "running") return;
+
+      clearInterval(clock);
+      clock = null;
+      state = "finished";
+      secondsLeft = 0;
+      target.hidden = true;
+
+      const newBest = score > best;
+      if (newBest) saveBest(score);
+
+      message.innerHTML = newBest
+        ? "<strong>NEW PERSONAL BEST!</strong> Nice shots. Run it back?"
+        : `<strong>ROUND OVER — ${score} HITS</strong> Press play again and beat your score.`;
+
+      message.hidden = false;
+      startButton.disabled = false;
+      startButton.textContent = "↻  PLAY AGAIN";
+      document.querySelector("#hint").textContent = "Tip: aim with your eyes, then snap your hand.";
+      updateStats();
+    }
+
+    function timeHasExpired() {
+      if (state === "running" && Date.now() >= endTime) {
+        finishRound();
+        return true;
+      }
+      return false;
+    }
+
+    target.addEventListener("click", (event) => {
+      event.stopPropagation();
+      if (state !== "running" || timeHasExpired()) return;
+
+      hits += 1;
+      score += 1;
+      updateStats();
+      placeTarget();
+    });
+
+    arena.addEventListener("click", (event) => {
+      if (state !== "running" || timeHasExpired()) return;
+      if (event.target.closest("#target")) return;
+
+      misses += 1;
+      updateStats();
+      arena.classList.remove("missed");
+      requestAnimationFrame(() => arena.classList.add("missed"));
+      setTimeout(() => arena.classList.remove("missed"), 120);
+    });
+
+    startButton.addEventListener("click", startRound);
+
+    window.addEventListener("resize", () => {
+      if (state === "running") placeTarget();
+    });
+
+    updateStats();
+  </script>
+</body>
+</html>
